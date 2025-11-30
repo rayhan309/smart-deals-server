@@ -39,7 +39,9 @@ async function run() {
       const existingUser = await users.findOne(query);
 
       if (existingUser) {
-        res.send({message: 'this user alrady exists, do not need to insert aging'});
+        res.send({
+          message: "this user alrady exists, do not need to insert aging",
+        });
       } else {
         const result = await users.insertOne(newUser);
         res.send(result);
@@ -52,6 +54,13 @@ async function run() {
       // const cursor = products.find().sort({price_min: -1}).skip(2).limit(5).project(projectFinnale);
 
       const cursor = products.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // latest products
+    app.get("/latest-products", async (req, res) => {
+      const cursor = products.find().sort({ created_at: 1 }).limit(6);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -102,6 +111,16 @@ async function run() {
         query.buyer_email = email;
       }
 
+      const cursor = bids.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // bids products id
+    app.get("/bids/byProducts/:id", async (req, res) => {
+      const productId = req.params.id;
+      const query = { product: productId };
+      console.log(query);
       const cursor = bids.find(query);
       const result = await cursor.toArray();
       res.send(result);
