@@ -105,7 +105,8 @@ async function run() {
     });
 
     // post methord
-    app.post("/products", async (req, res) => {
+    app.post("/products", verifyFirebaseToken, async (req, res) => {
+      console.log(req.token_email)
       const newProduct = req.body;
       const result = await products.insertOne(newProduct);
       res.send(result);
@@ -136,7 +137,7 @@ async function run() {
 
     // bids releted Apis
     app.get("/bids", logger, verifyFirebaseToken, async (req, res) => {
-      console.log(req.token_email);
+      // console.log(req.token_email);
       const reqEmail = req.token_email
       const email = req.query.email;
       const query = {};
