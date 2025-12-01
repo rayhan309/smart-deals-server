@@ -36,13 +36,12 @@ const verifyFirebaseToken = async (req, res, next) => {
     req.token_email = userInfo.email;
     next();
   } catch {
-    return res.status(401).send({ message: "unauthorized access" });
+    return res.status(401).send({ message: "unauthorized access" });    
   }
 };
 
 // const uri =
-//   "mongodb+srv://smart-server:smartServer@cluster0.sr4duj3.mongodb.net/?appName=Cluster0";
-const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@cluster0.sr4duj3.mongodb.net/?appName=Cluster0`;
+ const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@cluster0.sr4duj3.mongodb.net/?appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -138,8 +137,7 @@ async function run() {
     });
 
     // bids releted Apis
-    app.get("/bids", logger, verifyFirebaseToken, async (req, res) => {
-      // console.log(req.token_email);
+    app.get("/bids", logger, verifyFirebaseToken, async (req, res) => { 
       const reqEmail = req.token_email;
       const email = req.query.email;
       const query = {};
