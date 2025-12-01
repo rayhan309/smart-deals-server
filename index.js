@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const admin = require("firebase-admin");
@@ -39,8 +40,9 @@ const verifyFirebaseToken = async (req, res, next) => {
   }
 };
 
-const uri =
-  "mongodb+srv://smart-server:smartServer@cluster0.sr4duj3.mongodb.net/?appName=Cluster0";
+// const uri =
+//   "mongodb+srv://smart-server:smartServer@cluster0.sr4duj3.mongodb.net/?appName=Cluster0";
+const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@cluster0.sr4duj3.mongodb.net/?appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -106,7 +108,7 @@ async function run() {
 
     // post methord
     app.post("/products", verifyFirebaseToken, async (req, res) => {
-      console.log(req.token_email)
+      console.log(req.token_email);
       const newProduct = req.body;
       const result = await products.insertOne(newProduct);
       res.send(result);
@@ -138,12 +140,12 @@ async function run() {
     // bids releted Apis
     app.get("/bids", logger, verifyFirebaseToken, async (req, res) => {
       // console.log(req.token_email);
-      const reqEmail = req.token_email
+      const reqEmail = req.token_email;
       const email = req.query.email;
       const query = {};
       if (email) {
-        if(email !== reqEmail) {
-          return res.status(403).send({message: 'forbidden access'});
+        if (email !== reqEmail) {
+          return res.status(403).send({ message: "forbidden access" });
         }
         query.buyer_email = email;
       }
